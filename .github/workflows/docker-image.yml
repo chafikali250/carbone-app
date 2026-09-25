@@ -26,7 +26,17 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            cd carbon-app
+            # Vérification du dossier (détecte ai-carbon-app, ai-carbone-app ou carbone-app)
+            if [ -d "ai-carbon-app" ]; then
+              cd ai-carbon-app
+            elif [ -d "ai-carbone-app" ]; then
+              cd ai-carbone-app
+            elif [ -d "carbone-app" ]; then
+              cd carbone-app
+            else
+              cd carbon-app
+            fi
+
             git pull origin ${{ github.ref_name }}
             sudo docker stop carbon-app || true
             sudo docker rm carbon-app || true
