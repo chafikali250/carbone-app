@@ -1,0 +1,32 @@
+name: Docker Image CI & CD VMware
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupération du code
+        uses: actions/checkout@v4
+
+      - name: Construction de l'image Docker (Test)
+        run: docker build . --file Dockerfile --tag carbon-app:${{ github.sha }}
+
+      - name: Déploiement via SSH sur VMware
+        if: github.event_name == 'push'
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            cd carbon-app
+            git pull origin ${{ github.ref_name }}
+            sudo docker build -t carbon-app:latest .
+            sudo docker run -d --name carbon-app -p 3000:3000 --restart always carbon-app:latest
