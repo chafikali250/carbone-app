@@ -28,5 +28,7 @@ jobs:
           script: |
             cd carbon-app
             git pull origin ${{ github.ref_name }}
+            sudo docker stop carbon-app || true
+            sudo docker rm carbon-app || true
             sudo docker build -t carbon-app:latest .
             sudo docker run -d --name carbon-app -p 3000:3000 --restart always carbon-app:latest
