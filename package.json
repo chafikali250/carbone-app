@@ -1,0 +1,17 @@
+{
+  "name": "ai-carbon-footprint-api",
+  "version": "1.0.0",
+  "description": "API simple de calcul de consommation carbone pour requêtes IA",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
+  }
+}
